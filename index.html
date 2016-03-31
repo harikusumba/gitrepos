@@ -1,38 +1,37 @@
-var app = angular.module('myApp', ['ui.router', ]);
+<!doctype html>
+<html ng-app="myApp">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.min.js"></script>
+  </head>
+  <body>
+    <script type="text/ng-template" id="home.html">
+      <h1>Home</h1>
+      <h3>{{message}}</h3>
+      <table border='1'>
+      <tr ng-repeat='x in showdata track by $index'>
+      <td>{{x.name}}</td><td><a ui-sref='details({repoindex: $index})'>{{x.url}}</a></td>
+      </tr>
+      </table>
+      
+    </script>
+    <script type="text/ng-template" id="details.html">
+      <h1>Lodaing Selected Repo Details</h1>
+      <table border='1'>
+      <tr>
+      <td>{{repodata.name}}</td>
+      <td>{{repodata.id}}</td>
+      <td>{{repodata.full_name}}</td>
+      <td><img style='width:50%;height:50%' src='{{repodata.owner.avatar_url}}'/></td>
+      </tr>
+      </table>
+    </script>
 
-app.config(function($stateProvider) {
-  $stateProvider
+    <a href="#/">Home</a>
+    <a href="#/details">Details</a>
 
-  .state('home', {
-    url: '/',
-    templateUrl : 'home.html',
-    controller  : 'HomeController'
-  })
+    <div ui-view></div>
 
-  .state('details', {
-    url: '/details/:repoindex',
-    templateUrl : 'details.html',
-    controller  : 'DetailsController'
-  })
-});
-app.run(function($state){
-  $state.go('home');
-});
-app.factory('myservice', function($http){
-  return $http.get('https://api.github.com/repositories');
-  
-});
-app.controller('HomeController', function($rootScope, $scope, $http, myservice) {
-  $scope.message = 'Loading Git Repos';
-  
-  myservice.success(function(response){
-    $rootScope.showdata = response.splice(0,5);
-  });
-});
-
-app.controller('DetailsController', function($scope, $stateParams) {
-  $scope.message = 'Loading Repo Details';
-  repoindex = $stateParams.repoindex;
-  $scope.repodata = $scope.showdata[repoindex];
-  
-});
+    <script src="app.js"></script>
+  </body>
+</html>
